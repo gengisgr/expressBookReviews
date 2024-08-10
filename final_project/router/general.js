@@ -4,6 +4,10 @@ let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
+let booksPromise = new Promise((resolve,reject) => {
+  setTimeout(() => {
+    resolve("Promise resolved")
+  },5000)})
 
 public_users.post("/register", (req,res) => {
   const username = req.body.username;
@@ -26,42 +30,65 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-  res.send(JSON.stringify(books));
+  booksPromise.then((successMessage) => {
+    res.send(JSON.stringify(books));
+  })
 });
+
+let isbnPromise = new Promise((resolve,reject) => {
+  setTimeout(() => {
+    resolve("Promise resolved")
+  },5000)})
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
-  res.send(JSON.stringify(books[req.params.isbn]));
+  isbnPromise.then((successMessage) => {
+    res.send(JSON.stringify(books[req.params.isbn]));
+  })
 });
+
+let bookPromise = new Promise((resolve,reject) => {
+  setTimeout(() => {
+    resolve("Promise resolved")
+  },5000)})
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
-  let tmp = [];
-  for (c in books){
-    if (req.params.author == books[c]["author"]){
-      tmp.push(books[c]);
+  bookPromise.then((successMessage) => {
+    let tmp = [];
+    for (c in books){
+      if (req.params.author == books[c]["author"]){
+        tmp.push(books[c]);
+      }
     }
-  }
-  if (tmp){
-    return res.send(JSON.stringify(tmp));
-  } else {
-    return res.status(300).json({message: "Author not found"});
-  }
+    if (tmp){
+      return res.send(JSON.stringify(tmp));
+    } else {
+      return res.status(300).json({message: "Author not found"});
+    }
+  })
 });
+
+let titlePromise = new Promise((resolve,reject) => {
+  setTimeout(() => {
+    resolve("Promise resolved")
+  },5000)})
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-  let tmp = [];
-  for (c in books){
-    if (req.params.title == books[c]["title"]){
-      tmp.push(books[c]);
+  titlePromise.then((successMessage) => {
+    let tmp = [];
+    for (c in books){
+      if (req.params.title == books[c]["title"]){
+        tmp.push(books[c]);
+      }
     }
-  }
-  if (tmp){
-    return res.send(JSON.stringify(tmp));
-  } else {
-    return res.status(300).json({message: "Title not found"});
-  }
+    if (tmp){
+      return res.send(JSON.stringify(tmp));
+    } else {
+      return res.status(300).json({message: "Title not found"});
+    }
+  })
 });
 
 //  Get book review
